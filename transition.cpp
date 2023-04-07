@@ -1,4 +1,5 @@
-
+#ifndef TRANSITION_H
+#define TRANSITION_H
 
 class Transition {
 
@@ -27,3 +28,5 @@ class Transition {
 		char direction;
 
 };
+
+#endif

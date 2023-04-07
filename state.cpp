@@ -1,4 +1,5 @@
-
+#ifndef STATE_H
+#define STATE_H
 
 class State {
 
@@ -19,3 +20,5 @@ class State {
 		bool start_state;
 
 };
+
+#endif
