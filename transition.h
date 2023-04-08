@@ -1,6 +1,8 @@
 #ifndef TRANSITION_H
 #define TRANSITION_H
 
+#include<iostream>
+
 class Transition {
 
 	public:
@@ -17,6 +19,7 @@ class Transition {
 		char get_old_char() const { return old_char; }
 		char get_new_char() const { return new_char; }
 		char get_direction() const { return direction; }
+		bool write() const { return old_char != new_char; }
 
 	private:
 
@@ -28,5 +31,8 @@ class Transition {
 		char direction;
 
 };
+
+std::string int_to_successor(int num);
+std::string transition_to_fol(Transition& tr_data);
 
 #endif
