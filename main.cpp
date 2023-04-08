@@ -239,7 +239,7 @@ void print_transitions(std::vector<Transition>& transitions) {
 }
 
 void usage() {
-	std::cerr << "usage: tm-to-xml input_xml tape_txt\n"; 
+	std::cerr << "usage: tm-to-fol input_xml tape_txt\n"; 
 }
 
 
