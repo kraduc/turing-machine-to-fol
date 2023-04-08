@@ -43,8 +43,6 @@ std::string transition_to_fol(Transition& tr_data) {
 
 	if (tr_data.write()) fol += "¬(y≡x)→(";
 
-	std::cout << tr_data.write() << std::endl;
-
 	fol += "M(s(t),y)↔M(t,y))))";
 
 	if (tr_data.write()) fol += ")";

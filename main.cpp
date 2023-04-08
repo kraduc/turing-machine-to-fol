@@ -9,7 +9,55 @@
 #include"transition.h"
 #include"tape.h"
 
-void generate_dot_bram(std::ofstream& ostr, std::vector<Transition>& transitions) {
+// assumes there is only one starting state
+int starting_state(std::vector<State>& states) {
+	
+	for (unsigned int i = 0; i < states.size(); i++) {
+		if (states[i].is_start_state()) return i;
+	}
+	return -1;
+}
+
+// currently using integers instead of successor function
+std::string starting_state_to_fol(std::vector<State>& states, Tape& tape) {
+
+	std::string fol = "S(0,";
+	fol += std::to_string(starting_state(states));
+	fol += ")∧C(0,";
+	fol += std::to_string(tape.get_start_index());
+	fol += ")";
+
+	std::vector<int> marked_cells = tape.marked_cells();
+
+	for (unsigned int i = 0; i < marked_cells.size(); i++) {
+		fol += "∧M(0,";
+		if (marked_cells[i] < 0) fol += "¬";
+		fol += std::to_string(abs(marked_cells[i]));
+		fol += ")";
+	}
+
+	if (marked_cells.size() != 0) {
+		fol += "∧∀y,(¬(";
+
+		for (unsigned int i = 0; i < marked_cells.size(); i++) {
+			if (i != 0) fol += "∨";
+			fol += "(y≡";
+			if (marked_cells[i] < 0) fol += "¬";
+			fol += std::to_string(abs(marked_cells[i]));
+			fol += ")";
+		}
+
+		fol += ")→¬M(0,y))";
+	} else {
+		fol += "∧∀y,(¬M(0,y))";
+	}
+	
+	return fol;
+
+}
+
+void generate_dot_bram(std::ofstream& ostr, std::vector<Transition>& transitions,\
+		std::vector<State>& states, Tape& tape) {
 	ostr << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"\
 		 << "<bram>\n"\
 		 << "  <program>turing-machine-to-fol</program>\n"\
@@ -21,8 +69,16 @@ void generate_dot_bram(std::ofstream& ostr, std::vector<Transition>& transitions
 		 << "  </metadata>\n\n"\
 		 << "  <proof id=\"0\">\n";
 
+	ostr << "    <assumption linenum=\"0\">\n"\
+		 << "      <raw>";
+
+	ostr << starting_state_to_fol(states, tape);	
+
+	ostr << "</raw>\n"\
+		 << "    </assumption>\n";
+
 	for (unsigned int i = 0; i < transitions.size(); i++) {
-	ostr << "    <assumption linenum=\"" << i << "\">\n"\
+	ostr << "    <assumption linenum=\"" << i + 1 << "\">\n"\
 		 << "      <raw>";
 
 	ostr << transition_to_fol(transitions[i]);	
@@ -36,6 +92,7 @@ void generate_dot_bram(std::ofstream& ostr, std::vector<Transition>& transitions
 		 << "</bram>\n"\
 		 << std::endl;
 }
+
 
 // TODO: add error checking
 bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
@@ -232,6 +289,6 @@ int main(int argc, char* argv []) {
 		exit(1);
 	}
 
-	generate_dot_bram(ostr, transitions);
+	generate_dot_bram(ostr, transitions, states, tape);
 
 }

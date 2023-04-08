@@ -1,6 +1,8 @@
 #ifndef TAPE_H
 #define TAPE_H
 
+#include<vector>
+
 class Tape {
 
 	public:
@@ -15,6 +17,7 @@ class Tape {
 		int length() const { return len; }
 		int get_start_index() const { return start_index; }
 		int get_char(int index) const { return tape[index]; }
+		std::vector<int> marked_cells() const;
 
 		//Setters
 		void initialize_tape(char* t, int l, int s);
@@ -22,7 +25,7 @@ class Tape {
 		void set_char(int index, char c) { tape[index] = c; } 
 
 		//Print
-		void print_tape();
+		void print_tape() const;
 
 	private:
 
