@@ -105,11 +105,9 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
 
 			while (istr >> str && (str.compare("</States>") != 0)) {
 				// read <State_#> and store #
-				int id = -1;
-				char cstr[str.length()+1];
-				std::strcpy(cstr, str.c_str());
-				char buf[6];
-				sscanf(cstr, "<%5s_%d>",buf, &id);
+				std::string id;
+                id = str.substr(7);
+                id.pop_back();
 
 				// skip <x> and <y>
 				istr >> str >> str;
@@ -136,21 +134,19 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
                 str = str.substr(12);
                 str.pop_back();
                 id = std::stoi(str);
-                
-                char cstr[256], buf[256];
 
 				// read <fromstate>#</fromstate> and store #
 				istr >> str;
-				int from_state = -1;
-				std::strcpy(cstr, str.c_str());
-				char buf2[11];
-				sscanf(cstr, "<%9s>%d<%10s>",buf, &from_state, buf2);
+				std::string from_state = str.substr(11);
+                int ankle_pos = from_state.find('<');
+                from_state = from_state.substr(0, ankle_pos);
 
 				// read <tostate>#</tostate> and store #
 				istr >> str;
-				int to_state = -1;
-				std::strcpy(cstr, str.c_str());
-				sscanf(cstr, "<%7s>%d<%8s>",buf, &to_state, buf2);
+                std::string to_state;
+                to_state = str.substr(9);
+                ankle_pos = to_state.find('<');
+                to_state = to_state.substr(0, ankle_pos);
 
 				// read <oldchar>#</oldchar> and store #
 				istr >> str;
