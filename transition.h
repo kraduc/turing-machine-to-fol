@@ -33,6 +33,6 @@ class Transition {
 };
 
 std::string int_to_successor(int num);
-std::string transition_to_fol(Transition& tr_data);
+std::string transition_to_fol(const Transition& tr_data);
 
 #endif

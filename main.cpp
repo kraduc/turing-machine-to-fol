@@ -103,25 +103,25 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
 		if (str.compare("<States>") == 0) {
 
 			while (istr >> str && (str.compare("</States>") != 0)) {
-			// read <State_#> and store #
-			int id = -1;
-			char cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			char buf[6];
-			sscanf(cstr, "<%5s_%d>",buf, &id);
-			
-			// skip <x> and <y>
-			istr >> str >> str;
+				// read <State_#> and store #
+				int id = -1;
+				char cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				char buf[6];
+				sscanf(cstr, "<%5s_%d>",buf, &id);
 
-			// determine if final state or start state
-			istr >> str;
-			bool final_state = (str[12] == 't');
-			istr >> str;
-			bool start_state = (str[12] == 't');
+				// skip <x> and <y>
+				istr >> str >> str;
 
-			states.push_back(State(id, final_state, start_state));
+				// determine if final state or start state
+				istr >> str;
+				bool final_state = (str[12] == 't');
+				istr >> str;
+				bool start_state = (str[12] == 't');
 
-			istr >> str;
+				states.push_back(State(id, final_state, start_state));
+
+				istr >> str;
 
 			}
 			
@@ -130,56 +130,56 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
 		if (str.compare("<Transitions>") == 0) {
 
 			while (istr >> str && (str.compare("</Transitions>") != 0)) {
-			// read <Transition_#> and store #
-			int id = -1;
-			char cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			char buf[11];
-			sscanf(cstr, "<%10s_%d>",buf, &id);
+				// read <Transition_#> and store #
+				int id = -1;
+				char cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				char buf[11];
+				sscanf(cstr, "<%10s_%d>",buf, &id);
 
-			// read <fromstate>#</fromstate> and store #
-			istr >> str;
-			int from_state = -1;
-			cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			char buf2[11];
-			sscanf(cstr, "<%9s>%d<%10s>",buf, &from_state, buf2);
+				// read <fromstate>#</fromstate> and store #
+				istr >> str;
+				int from_state = -1;
+				cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				char buf2[11];
+				sscanf(cstr, "<%9s>%d<%10s>",buf, &from_state, buf2);
 
-			// read <tostate>#</tostate> and store #
-			istr >> str;
-			int to_state = -1;
-			cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			sscanf(cstr, "<%7s>%d<%8s>",buf, &to_state, buf2);
+				// read <tostate>#</tostate> and store #
+				istr >> str;
+				int to_state = -1;
+				cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				sscanf(cstr, "<%7s>%d<%8s>",buf, &to_state, buf2);
 
-			// read <oldchar>#</oldchar> and store #
-			istr >> str;
-			char old_char = 0;
-			cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			sscanf(cstr, "<%7s>%c<%8s>",buf, &old_char, buf2);
-			
-			// read <newchar>#</newchar> and store #
-			istr >> str;
-			char new_char = 0;
-			cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			sscanf(cstr, "<%7s>%c<%8s>",buf, &new_char, buf2);
-			if (new_char == 'n') new_char = old_char;
+				// read <oldchar>#</oldchar> and store #
+				istr >> str;
+				char old_char = 0;
+				cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				sscanf(cstr, "<%7s>%c<%8s>",buf, &old_char, buf2);
 				
-			// read <direction>#</direction> and store direction as L, R, or 0
-			istr >> str;
-			char direction = 0;
-			cstr[str.length()+1];
-			std::strcpy(cstr, str.c_str());
-			sscanf(cstr, "<%9s>%c<%10s>",buf, &direction, buf2);
-			if (direction == '1') direction = 'L';
-			else if (direction == '2') direction = 'R';
+				// read <newchar>#</newchar> and store #
+				istr >> str;
+				char new_char = 0;
+				cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				sscanf(cstr, "<%7s>%c<%8s>",buf, &new_char, buf2);
+				if (new_char == 'n') new_char = old_char;
+					
+				// read <direction>#</direction> and store direction as L, R, or 0
+				istr >> str;
+				char direction = 0;
+				cstr[str.length()+1];
+				std::strcpy(cstr, str.c_str());
+				sscanf(cstr, "<%9s>%c<%10s>",buf, &direction, buf2);
+				if (direction == '1') direction = 'L';
+				else if (direction == '2') direction = 'R';
 
-			transitions.push_back(Transition(id, from_state, to_state, old_char,\
-						new_char, direction));
+				transitions.push_back(Transition(id, from_state, to_state, old_char,\
+							new_char, direction));
 
-			istr >> str;
+				istr >> str;
 
 			}
 			
@@ -192,15 +192,15 @@ void parse_tape(std::ifstream& istr, Tape& tape) {
 	
 	std::string str;
 	istr >> str;
-	assert (str.compare("Tape") == 0);
+	assert (str == "Tape");
 	int length = 0;
 	istr >> length;
-	char* tape_str = new char[length];
+	std::string tape_str;
 	char c;
 
 	for (int i = 0; i < length; i++) {
 		istr >> c;
-		tape_str[i] = c;
+		tape_str += c;
 	}
 
 	int start_index = 0;

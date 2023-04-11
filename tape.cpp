@@ -16,7 +16,7 @@ void Tape::print_tape() const {
 
 }
 
-void Tape::initialize_tape(char* t, int l, int s) {
+void Tape::initialize_tape(const std::string& t, int l, int s) {
 	
 	tape = t;
 	len = l;

@@ -17,7 +17,7 @@ std::string int_to_successor(int num) {
 	return output;
 }
 
-std::string transition_to_fol(Transition& tr_data) {
+std::string transition_to_fol(const Transition& tr_data) {
 	
 	std::string from_state = int_to_successor(tr_data.get_from_state_index());
 	std::string to_state = int_to_successor(tr_data.get_to_state_index());
