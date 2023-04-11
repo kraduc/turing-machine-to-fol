@@ -10,7 +10,7 @@
 #include"tape.h"
 
 // assumes there is only one starting state
-int starting_state(std::vector<State>& states) {
+int starting_state(const std::vector<State>& states) {
 	
 	for (unsigned int i = 0; i < states.size(); i++) {
 		if (states[i].is_start_state()) return i;
@@ -19,7 +19,7 @@ int starting_state(std::vector<State>& states) {
 }
 
 // currently using integers instead of successor function
-std::string starting_state_to_fol(std::vector<State>& states, Tape& tape) {
+std::string starting_state_to_fol(const std::vector<State>& states, const Tape& tape) {
 
 	std::string fol = "S(0,";
 	fol += std::to_string(starting_state(states));
@@ -56,8 +56,8 @@ std::string starting_state_to_fol(std::vector<State>& states, Tape& tape) {
 
 }
 
-void generate_dot_bram(std::ofstream& ostr, std::vector<Transition>& transitions,\
-		std::vector<State>& states, Tape& tape) {
+void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& transitions,\
+		const std::vector<State>& states, const Tape& tape) {
 	ostr << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"\
 		 << "<bram>\n"\
 		 << "  <program>turing-machine-to-fol</program>\n"\
@@ -212,7 +212,7 @@ void parse_tape(std::ifstream& istr, Tape& tape) {
 }
 
 // debugging
-void print_tape(Tape& tape) {
+void print_tape(const Tape& tape) {
 	std::cout << "length: " << tape.length() << std::endl;
 	std::cout << "starting index: " << tape.get_start_index() << std::endl;
 	std::cout << "val at starting index: " << tape.get_char(tape.get_start_index()) << std::endl;
@@ -221,7 +221,7 @@ void print_tape(Tape& tape) {
 }
 
 // debugging
-void print_states(std::vector<State>& states) {
+void print_states(const std::vector<State>& states) {
 	
 	for (unsigned int i = 0; i < states.size(); i++) {
 		std::cout << states[i].get_id() << std::endl;
@@ -230,7 +230,7 @@ void print_states(std::vector<State>& states) {
 }
 
 // debugging
-void print_transitions(std::vector<Transition>& transitions) {
+void print_transitions(const std::vector<Transition>& transitions) {
 	
 	for (unsigned int i = 0; i < transitions.size(); i++) {
 		std::cout << transitions[i].get_direction() << std::endl;
