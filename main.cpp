@@ -5,6 +5,7 @@
 #include<sstream>
 #include<vector>
 #include<cassert>
+#include<stack>
 #include"state.h"
 #include"transition.h"
 #include"tape.h"
@@ -94,9 +95,65 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 		 << std::endl;
 }
 
+bool verify_xml(const std::string& filename){
+	std::ifstream istr(filename);
+
+	// error checking
+	if (!istr.good()) {
+		std::cerr << "cannot open " << filename << " to read." << std::endl;
+		return false;
+	}
+
+	std::stack<std::string> mem;
+
+	// parse in the full text
+	std::string tmp, fulltext;
+	while (istr >> tmp) {
+		fulltext += tmp;
+	}
+
+	// go through the text
+	for (int i = 0 ; i < fulltext.size() ; i++) {
+		if (fulltext[i] == '<') {
+			int end_ankle_pos = fulltext.find('>', i);
+			if (end_ankle_pos != -1) {
+				
+				// this is a "comment" tag
+				if (fulltext[i + 1] == '?' && fulltext[end_ankle_pos - 1] == '?') {
+					continue;
+				}
+
+				bool close_tag = false;
+				if (fulltext[i + 1] == '/') close_tag = true;
+
+				int start_index = i + 1;
+				if (close_tag) start_index++;
+
+				int tag_size = end_ankle_pos - 1 - start_index + 1;
+
+				std::string tag_name = fulltext.substr(start_index, tag_size);
+
+				if (close_tag) {
+					if (mem.empty()) return false;
+					else if (tag_name == mem.top()) mem.pop();
+					else return false;
+				}
+				else {
+					mem.push(tag_name);
+				}
+
+			}
+			else return false;
+			i = end_ankle_pos;
+		}
+	}
+
+	return mem.empty();
+
+}
 
 // TODO: add error checking
-bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
+void parse_xml(std::ifstream& istr, std::vector<State>& states, \
 		std::vector<Transition>& transitions) {
 
 	std::string str = "";
@@ -172,7 +229,6 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
 			
 		}
 	}
-	return true;
 }
 
 void parse_tape(std::ifstream& istr, Tape& tape) {
@@ -264,6 +320,8 @@ int main(int argc, char* argv []) {
 	std::vector<State> states;
 	std::vector<Transition> transitions;
 	Tape tape;
+
+	assert(verify_xml(filename));
 
 	parse_xml(istr, states, transitions);
 
