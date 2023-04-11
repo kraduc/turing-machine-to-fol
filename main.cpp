@@ -78,14 +78,14 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 		 << "    </assumption>\n";
 
 	for (unsigned int i = 0; i < transitions.size(); i++) {
-        // std::cout << "HELLO" << std::endl;
-        ostr << "    <assumption linenum=\"" << i + 1 << "\">\n"\
-            << "      <raw>";
+		// std::cout << "HELLO" << std::endl;
+		ostr << "    <assumption linenum=\"" << i + 1 << "\">\n"\
+			<< "      <raw>";
 
-        ostr << transition_to_fol(transitions[i]);	
+		ostr << transition_to_fol(transitions[i]);	
 
-        ostr << "</raw>\n"\
-            << "    </assumption>\n";
+		ostr << "</raw>\n"\
+			<< "    </assumption>\n";
 
 	}
 
@@ -106,8 +106,8 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
 			while (istr >> str && (str.compare("</States>") != 0)) {
 				// read <State_#> and store #
 				std::string id;
-                id = str.substr(7);
-                id.pop_back();
+				id = str.substr(7);
+				id.pop_back();
 
 				// skip <x> and <y>
 				istr >> str >> str;
@@ -131,22 +131,22 @@ bool parse_xml(std::ifstream& istr, std::vector<State>& states, \
 			while (istr >> str && (str.compare("</Transitions>") != 0)) {
 				// read <Transition_#> and store #
 				int id = -1;
-                str = str.substr(12);
-                str.pop_back();
-                id = std::stoi(str);
+				str = str.substr(12);
+				str.pop_back();
+				id = std::stoi(str);
 
 				// read <fromstate>#</fromstate> and store #
 				istr >> str;
 				std::string from_state = str.substr(11);
-                int ankle_pos = from_state.find('<');
-                from_state = from_state.substr(0, ankle_pos);
+				int ankle_pos = from_state.find('<');
+				from_state = from_state.substr(0, ankle_pos);
 
 				// read <tostate>#</tostate> and store #
 				istr >> str;
-                std::string to_state;
-                to_state = str.substr(9);
-                ankle_pos = to_state.find('<');
-                to_state = to_state.substr(0, ankle_pos);
+				std::string to_state;
+				to_state = str.substr(9);
+				ankle_pos = to_state.find('<');
+				to_state = to_state.substr(0, ankle_pos);
 
 				// read <oldchar>#</oldchar> and store #
 				istr >> str;
