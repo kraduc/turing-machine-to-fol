@@ -79,7 +79,6 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 		 << "    </assumption>\n";
 
 	for (unsigned int i = 0; i < transitions.size(); i++) {
-		// std::cout << "HELLO" << std::endl;
 		ostr << "    <assumption linenum=\"" << i + 1 << "\">\n"\
 			<< "      <raw>";
 
@@ -89,6 +88,8 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 			<< "    </assumption>\n";
 
 	}
+
+	// TODO: ADD PEANO AXIOMS HERE
 
 	ostr << "  </proof>\n"\
 		 << "</bram>\n"\
@@ -231,27 +232,27 @@ void parse_xml(std::ifstream& istr, std::vector<State>& states, \
 	}
 }
 
-void parse_tape(std::ifstream& istr, Tape& tape) {
+bool parse_tape(std::ifstream& istr, Tape& tape) {
 	
 	std::string str;
 	istr >> str;
-	assert (str == "Tape");
+	if (str != "Tape") return false;
 	int length = 0;
-	istr >> length;
+	if (!(istr >> length)) return false;
 	std::string tape_str;
 	char c;
 
 	for (int i = 0; i < length; i++) {
-		istr >> c;
+		if (!(istr >> c)) return false;
 		tape_str += c;
 	}
 
 	int start_index = 0;
-	istr >> str;
+	if (!(istr >> str)) return false;
 	start_index = stoi(str);
 
 	tape.initialize_tape(tape_str, length, start_index);
-	
+	return true;
 }
 
 // debugging
@@ -321,11 +322,17 @@ int main(int argc, char* argv []) {
 	std::vector<Transition> transitions;
 	Tape tape;
 
-	assert(verify_xml(filename));
+	if (!verify_xml(filename)) {
+		std::cerr << "Turing Machine XML " << argv[1] << " is not a well formed"
+				  << "document.\n";
+		exit(1);
+	}
 
 	parse_xml(istr, states, transitions);
 
-	parse_tape(istr2, tape);
+	if (!parse_tape(istr2, tape)) {
+		std::cerr << "Tape file " << argv[2] << " is not well formed.\n";
+	}
 
 	std::string outfilename = filename.substr(0, filename.size()-4) + ".bram"; 
 	std::ofstream ostr(outfilename);
