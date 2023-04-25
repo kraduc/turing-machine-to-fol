@@ -54,3 +54,21 @@ std::string transition_to_fol(const Transition& tr_data) {
 
 }
 
+std::string zero_transition_to_fol(const Transition& tr_data) {
+	std::string from_state = tr_data.get_from_state();
+	std::string to_state = tr_data.get_to_state();
+
+	std::string fol = "∀t,∀x,((S(t," + from_state + ")∧C(t,0)∧";
+
+	if (tr_data.get_old_char() - '0' == 0) fol += "¬";
+
+	fol += "M(t,0))→(S(s(t)," + to_state + ")∧C(s(t),0)∧∀y,(";
+
+	if (tr_data.write()) fol += "¬(y≡x)→(";
+
+	fol += "M(s(t),y)↔M(t,y))))";
+
+	if (tr_data.write()) fol += ")";
+	
+	return fol;
+}

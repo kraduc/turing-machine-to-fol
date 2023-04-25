@@ -78,14 +78,27 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 	ostr << "</raw>\n"\
 		 << "    </assumption>\n";
 
-	for (unsigned int i = 0; i < transitions.size(); i++) {
-		ostr << "    <assumption linenum=\"" << i + 1 << "\">\n"\
+	unsigned int line_num = 1;
+
+	for (const Transition& t: transitions) {
+		ostr << "    <assumption linenum=\"" << line_num++ << "\">\n"\
 			<< "      <raw>";
 
-		ostr << transition_to_fol(transitions[i]);	
+		ostr << transition_to_fol(t);
 
 		ostr << "</raw>\n"\
 			<< "    </assumption>\n";
+
+		// The read/write head can't move past the leftmost cell
+		if (t.get_direction() == 'L') {
+			ostr << "    <assumption linenum=\"" << line_num++ << "\">\n"\
+				<< "      <raw>";
+
+			ostr << zero_transition_to_fol(t);
+
+			ostr << "</raw>\n"\
+				<< "    </assumption>\n";
+		}
 
 	}
 
