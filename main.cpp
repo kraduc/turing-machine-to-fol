@@ -102,7 +102,19 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 
 	}
 
-	// TODO: ADD PEANO AXIOMS HERE
+	// PA1
+	ostr << "    <assumption linenum=\"" << line_num++ << "\">\n"\
+		 << "      <raw>"\
+		 << "∀x,¬0≡s(x)"\
+		 << "</raw>\n"\
+		 << "    </assumption>\n";
+	
+	// PA2
+	ostr << "    <assumption linenum=\"" << line_num++ << "\">\n"\
+		<< "      <raw>"\
+		<< "∀x,∀y,(x≡y↔s(x)≡s(y))"\
+		<< "</raw>\n"\
+		<< "    </assumption>\n";
 
 	ostr << "  </proof>\n"\
 		 << "</bram>\n"\
