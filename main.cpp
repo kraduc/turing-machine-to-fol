@@ -12,7 +12,6 @@
 
 // assumes there is only one starting state
 int starting_state(const std::vector<State>& states) {
-	
 	for (unsigned int i = 0; i < states.size(); i++) {
 		if (states[i].is_start_state()) return i;
 	}
@@ -23,19 +22,11 @@ int starting_state(const std::vector<State>& states) {
 std::string starting_state_to_fol(const std::vector<State>& states, const Tape& tape) {
 
 	std::string fol = "S(0,";
-	fol += std::to_string(starting_state(states));
-	fol += ")∧C(0,";
-	fol += std::to_string(tape.get_start_index());
-	fol += ")";
+	int start_state_idx = starting_state(states);
+	fol += states[start_state_idx].get_id();
+	fol += ")∧C(0,0)";
 
 	std::vector<int> marked_cells = tape.marked_cells();
-
-	for (unsigned int i = 0; i < marked_cells.size(); i++) {
-		fol += "∧M(0,";
-		if (marked_cells[i] < 0) fol += "¬";
-		fol += std::to_string(abs(marked_cells[i]));
-		fol += ")";
-	}
 
 	if (marked_cells.size() != 0) {
 		fol += "∧∀y,(¬(";
@@ -43,12 +34,12 @@ std::string starting_state_to_fol(const std::vector<State>& states, const Tape& 
 		for (unsigned int i = 0; i < marked_cells.size(); i++) {
 			if (i != 0) fol += "∨";
 			fol += "(y≡";
-			if (marked_cells[i] < 0) fol += "¬";
-			fol += std::to_string(abs(marked_cells[i]));
+			if (marked_cells[i] < 0) continue;
+			fol += int_to_successor(abs(marked_cells[i]));
 			fol += ")";
 		}
 
-		fol += ")→¬M(0,y))";
+		fol += ")↔M(0,y))";
 	} else {
 		fol += "∧∀y,(¬M(0,y))";
 	}
