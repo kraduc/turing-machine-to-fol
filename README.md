@@ -14,6 +14,8 @@ To use the program you would need to prepare the following two files:
 
 Use the command `./tm-to-fol turing-machine.xml turing-machine-tape.txt` to run the program. After the program has terminated, you will be able to find `turing-machine.bram` in your folder. This will be the First Order Logic statements that describe the Turing Machine along with its tape you have put in.
 
+You could include an extra parameter at the end of the command to indicate which cell the initial read write head is located at (default value is 0, i.e. the leftmost cell of the tape).
+
 The output file of this program follows the [Bram File Format](https://github.com/Bram-Hub/Bram-File-Format) and can be viewed using [Aris](https://github.com/Bram-Hub/aris). Note that even with small Turing machines, the output file can contain a lot of symbols which will take some time for Aris to load.
 
 ## Known Issues
@@ -22,4 +24,4 @@ The output file of this program follows the [Bram File Format](https://github.co
 ## Interested Contributors
 For those who are taking Computability and Logic and wanting to contribute to project. Here are possible improvements one could make to the program:
 * Creating a Graphical User Interface
-* Coming up with a way to represent the integers (both positive and negative) in formal logic.
+* Coming up with a way to represent the integers (both positive and negative) in formal logic so we don't have to restrict ourselves with single-sided infinite tape.
