@@ -64,9 +64,7 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 		 << "  <program>turing-machine-to-fol</program>\n"\
 		 << "  <Version>1.0</Version>\n"\
 		 << "  <metadata>\n"\
-		 << "      <author>ahh</author>\n"\
-		 << "      <created>ahh</created>\n"\
-		 << "      <modified>ahh</modified>\n"\
+		 << "      <author>turing-machine-to-fol</author>\n"\
 		 << "  </metadata>\n\n"\
 		 << "  <proof id=\"0\">\n";
 
@@ -112,7 +110,7 @@ void generate_dot_bram(std::ofstream& ostr, const std::vector<Transition>& trans
 	// PA2
 	ostr << "    <assumption linenum=\"" << line_num++ << "\">\n"\
 		<< "      <raw>"\
-		<< "∀x,∀y,(x≡y↔s(x)≡s(y))"\
+		<< "∀x,∀y,((x≡y)↔(s(x)≡s(y)))"\
 		<< "</raw>\n"\
 		<< "    </assumption>\n";
 
@@ -257,7 +255,7 @@ void parse_xml(std::ifstream& istr, std::vector<State>& states, \
 	}
 }
 
-bool parse_tape(std::ifstream& istr, Tape& tape) {
+bool parse_tape(std::ifstream& istr, Tape& tape, int start_pos) {
 	
 	std::string str;
 	istr >> str;
@@ -276,7 +274,7 @@ bool parse_tape(std::ifstream& istr, Tape& tape) {
 	if (!(istr >> str)) return false;
 	start_index = stoi(str);
 
-	tape.initialize_tape(tape_str, length, start_index);
+	tape.initialize_tape(tape_str, length, start_index - start_pos);
 	return true;
 }
 
@@ -308,20 +306,18 @@ void print_transitions(const std::vector<Transition>& transitions) {
 }
 
 void usage() {
-	std::cerr << "usage: tm-to-fol input_xml tape_txt\n"; 
+	std::cerr << "usage: tm-to-fol input_xml tape_txt [starting position]\n"; 
 }
 
 
 int main(int argc, char* argv []) {
 
-	if (argc != 3) {
+	if (argc != 3 && argc != 4) {
 		usage();
 		exit(1);
 	}
 
 	std::ifstream istr(argv[1]);
-
-	// TODO: tbh should probably check that it's an xml file
 	
 	std::string filename = std::string(argv[1]);
 
@@ -343,6 +339,21 @@ int main(int argc, char* argv []) {
 		exit(1);
 	}
 
+	int start_pos = 0;
+	if (argc == 4) {
+		std::string start_pos_str(argv[3]);
+		try {
+			for (char c: start_pos_str) {
+				if (!isdigit(c)) throw -1;
+			}
+			start_pos = std::stoi(start_pos_str);
+		}
+		catch(...) {
+			std::cerr << "Invalid number: " << argv[3] << std::endl;
+			exit(1);
+		}
+	}
+
 	std::vector<State> states;
 	std::vector<Transition> transitions;
 	Tape tape;
@@ -355,7 +366,7 @@ int main(int argc, char* argv []) {
 
 	parse_xml(istr, states, transitions);
 
-	if (!parse_tape(istr2, tape)) {
+	if (!parse_tape(istr2, tape, start_pos)) {
 		std::cerr << "Tape file " << argv[2] << " is not well formed.\n";
 	}
 
