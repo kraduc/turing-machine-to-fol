@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<TuringMachine>
+    <States>
+        <State_move>
+            <x>128.0</x>
+            <y>205.0</y>
+            <finalstate>false</finalstate>
+            <startstate>true</startstate>
+        </State_move>
+        <State_remove>
+            <x>254.0</x>
+            <y>201.0</y>
+            <finalstate>false</finalstate>
+            <startstate>false</startstate>
+        </State_remove>
+        <State_halt>
+            <x>348.0</x>
+            <y>203.0</y>
+            <finalstate>true</finalstate>
+            <startstate>false</startstate>
+        </State_halt>
+    </States>
+    <Transitions>
+        <Transition_0>
+            <fromstate>move</fromstate>
+            <tostate>remove</tostate>
+            <oldchar>0</oldchar>
+            <newchar>0</newchar>
+            <direction>1</direction>
+        </Transition_0>
+        <Transition_1>
+            <fromstate>move</fromstate>
+            <tostate>move</tostate>
+            <oldchar>1</oldchar>
+            <newchar>1</newchar>
+            <direction>2</direction>
+        </Transition_1>
+        <Transition_2>
+            <fromstate>remove</fromstate>
+            <tostate>halt</tostate>
+            <oldchar>1</oldchar>
+            <newchar>0</newchar>
+            <direction>1</direction>
+        </Transition_2>
+    </Transitions>
+</TuringMachine>
