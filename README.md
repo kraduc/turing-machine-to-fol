@@ -24,4 +24,4 @@ The output file of this program follows the [Bram File Format](https://github.co
 ## Interested Contributors
 For those who are taking Computability and Logic and wanting to contribute to project. Here are possible improvements one could make to the program:
 * Creating a Graphical User Interface
-* Coming up with a way to represent the integers (both positive and negative) in formal logic so we don't have to restrict ourselves with single-sided infinite tape.
+* Coming up with a way to represent the integers (both positive and negative) in formal logic so we don't have to restrict ourselves with machines using single-sided infinite tapes.
